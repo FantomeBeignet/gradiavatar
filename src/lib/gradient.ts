@@ -69,7 +69,7 @@ export function stringToLinearGradient(input: string, size: number, direction: D
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
 	const c2 = hslToHex(h2, s2, l2);
-	let x1, y1, x2, y2: number;
+	let x1: number, y1: number, x2: number, y2: number;
 	switch (direction) {
 		case 'vertical':
 			x1 = size / 2;
