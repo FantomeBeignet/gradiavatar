@@ -21,7 +21,7 @@ function hslToHex(h: number, s: number, l: number): string {
 	return [(f(0) >> 16) & 255, (f(8) >> 8) & 255, f(4) & 255].join(',');
 }
 
-export function hashToAvatar(input: string, size: number, direction: Direction): string {
+export function stringToAvatar(input: string, size: number, direction: Direction): string {
 	const i1 = input.substring(0, input.length / 2);
 	const i2 = input.substring(input.length / 2);
 	const hash1 = hash(i1);
