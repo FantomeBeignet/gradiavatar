@@ -50,7 +50,7 @@ function hslToHex(h: number, s: number, l: number): string {
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export function stringToAvatar(input: string, size: number, direction: Direction): string {
+export function stringToLinearGradient(input: string, size: number, direction: Direction): string {
 	const i1 = input.substring(0, input.length / 2);
 	const i2 = input.substring(input.length / 2);
 	const hash1 = hash(i1);
