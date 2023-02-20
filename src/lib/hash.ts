@@ -1,7 +1,8 @@
 import crypto from 'node:crypto';
 
-export function hash(data: string): number {
+export function hash(data: string): [number, number] {
 	const hash = crypto.createHash('sha256');
 	hash.update(data);
-	return parseInt(hash.digest('hex').slice(0, 8), 16);
+	const hex = hash.digest('hex');
+	return [parseInt(hex.slice(0, 16), 16), parseInt(hex.slice(16, 32), 16)];
 }

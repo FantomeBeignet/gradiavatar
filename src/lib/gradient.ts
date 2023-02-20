@@ -61,10 +61,7 @@ function hslToHex(h: number, s: number, l: number): string {
 }
 
 export function stringToLinearGradient(input: string, size: number, direction: Direction): string {
-	const i1 = input.substring(0, input.length / 2);
-	const i2 = input.substring(input.length / 2);
-	const hash1 = hash(i1);
-	const hash2 = hash(i2);
+	const [hash1, hash2] = hash(input);
 	const [h1, s1, l1] = hashToHSL(hash1);
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
@@ -108,10 +105,7 @@ export function stringToLinearGradient(input: string, size: number, direction: D
 }
 
 export function stringToRadialGradient(input: string, size: number, offset: Offset): string {
-	const i1 = input.substring(0, input.length / 2);
-	const i2 = input.substring(input.length / 2);
-	const hash1 = hash(i1);
-	const hash2 = hash(i2);
+	const [hash1, hash2] = hash(input);
 	const [h1, s1, l1] = hashToHSL(hash1);
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
