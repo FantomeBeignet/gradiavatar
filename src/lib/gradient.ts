@@ -1,6 +1,16 @@
 import { hash } from './hash';
 
 export type Direction = 'vertical' | 'horizontal' | 'diagonal' | 'antidiagonal';
+export type Offset =
+	| 'center'
+	| 'north'
+	| 'south'
+	| 'east'
+	| 'west'
+	| 'northeast'
+	| 'northwest'
+	| 'southeast'
+	| 'southwest';
 
 function erfinv(x: number): number {
 	const a = 0.147;
@@ -93,6 +103,74 @@ export function stringToLinearGradient(input: string, size: number, direction: D
             <stop stop-color="${c1}" />
             <stop offset="1" stop-color="${c2}" />
         </linearGradient>
+    </defs>
+</svg>`.trim();
+}
+
+export function stringToRadialGradient(input: string, size: number, offset: Offset): string {
+	const i1 = input.substring(0, input.length / 2);
+	const i2 = input.substring(input.length / 2);
+	const hash1 = hash(i1);
+	const hash2 = hash(i2);
+	const [h1, s1, l1] = hashToHSL(hash1);
+	const c1 = hslToHex(h1, s1, l1);
+	const [h2, s2, l2] = hashToHSL(hash2);
+	const c2 = hslToHex(h2, s2, l2);
+	let cx: string, cy: string, r: string;
+	switch (offset) {
+		case 'center':
+			cx = '50%';
+			cy = '50%';
+			r = '50%';
+			break;
+		case 'north':
+			cx = '50%';
+			cy = '25%';
+			r = '75%';
+			break;
+		case 'south':
+			cx = '50%';
+			cy = '75%';
+			r = '75%';
+			break;
+		case 'east':
+			cx = '75%';
+			cy = '50%';
+			r = '75%';
+			break;
+		case 'west':
+			cx = '25%';
+			cy = '50%';
+			r = '75%';
+			break;
+		case 'northeast':
+			cx = '75%';
+			cy = '25%';
+			r = '87.5%';
+			break;
+		case 'northwest':
+			cx = '25%';
+			cy = '25%';
+			r = '87.5%';
+			break;
+		case 'southeast':
+			cx = '75%';
+			cy = '75%';
+			r = '87.5%';
+			break;
+		case 'southwest':
+			cx = '25%';
+			cy = '75%';
+			r = '87.5%';
+			break;
+	}
+	return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="url(#gradient)" />
+    <defs>
+        <radialGradient id="gradient" cx="${cy}" cy="${cy}" r="${r}" gradientUnits="userSpaceOnUse">
+            <stop stop-color="${c1}" />
+            <stop offset="1" stop-color="${c2}" />
+        </radialGradient>
     </defs>
 </svg>`.trim();
 }
