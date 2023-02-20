@@ -2,23 +2,52 @@ import { hash } from './hash';
 
 export type Direction = 'vertical' | 'horizontal' | 'diagonal' | 'antidiagonal';
 
-function gaussianFunction(input: number, mean: number, sigma: number): number {
-	const coef = 1 / (sigma * Math.sqrt(2 * Math.PI));
-	const exp = Math.exp(-Math.pow(input - mean, 2) / (2 * Math.pow(sigma, 2)));
-	return coef * exp;
+function erfinv(x: number): number {
+	const a = 0.147;
+	const b = 2 / (Math.PI * a) + Math.log(1 - x ** 2) / 2;
+	const sqrt1 = Math.sqrt(b ** 2 - Math.log(1 - x ** 2) / a);
+	const sqrt2 = Math.sqrt(sqrt1 - b);
+	return sqrt2 * Math.sign(x);
+}
+
+function remap(x: number, a: number, b: number, c: number, d: number): number {
+	const y = ((x - a) * (d - c)) / (b - a) + c;
+	return 0.5 + 0.1 * erfinv(2 * ((y - c) / (d - c)) - 1);
 }
 
 function hashToHSL(hash: number): number[] {
 	const h = hash % 359;
-	const s = gaussianFunction(hash, 50, 5) / 100;
-	const l = gaussianFunction(hash, 50, 5) / 100;
+	const x = hash % 100;
+	const s = 1;
+	const l = remap(x, 0, 100, 0, 1);
 	return [h, s, l];
 }
 
 function hslToHex(h: number, s: number, l: number): string {
-	const a = s * Math.min(l, 1 - l);
-	const f = (n: number, k = (n + h / 30) % 12) => l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-	return [(f(0) >> 16) & 255, (f(8) >> 8) & 255, f(4) & 255].join(',');
+	h /= 360;
+	let r, g, b;
+	if (s === 0) {
+		r = g = b = l; // achromatic
+	} else {
+		const hslToRGB = (p: number, q: number, t: number) => {
+			if (t < 0) t += 1;
+			if (t > 1) t -= 1;
+			if (t < 1 / 6) return p + (q - p) * 6 * t;
+			if (t < 1 / 2) return q;
+			if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+			return p;
+		};
+		const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+		const p = 2 * l - q;
+		r = hslToRGB(p, q, h + 1 / 3);
+		g = hslToRGB(p, q, h);
+		b = hslToRGB(p, q, h - 1 / 3);
+	}
+	const toHex = (x: number) => {
+		const hex = Math.round(x * 255).toString(16);
+		return hex.length === 1 ? '0' + hex : hex;
+	};
+	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
 export function stringToAvatar(input: string, size: number, direction: Direction): string {
@@ -60,10 +89,10 @@ export function stringToAvatar(input: string, size: number, direction: Direction
 	return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="url(#gradient)" />
     <defs>
-      <linearGradient id="gradient" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse">
-        <stop stop-color="${c1}" />
-        <stop offset="1" stop-color="${c2}" />
-      </linearGradient>
+        <linearGradient id="gradient" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse">
+            <stop stop-color="${c1}" />
+            <stop offset="1" stop-color="${c2}" />
+        </linearGradient>
     </defs>
-  </svg>`.trim();
+</svg>`.trim();
 }
