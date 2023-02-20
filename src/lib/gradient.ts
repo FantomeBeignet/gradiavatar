@@ -1,6 +1,6 @@
 import { hash } from './hash';
 
-type Direction = 'vertical' | 'horizontal' | 'diagonal' | 'antidiagonal';
+export type Direction = 'vertical' | 'horizontal' | 'diagonal' | 'antidiagonal';
 
 function gaussianFunction(input: number, mean: number, sigma: number): number {
 	const coef = 1 / (sigma * Math.sqrt(2 * Math.PI));
