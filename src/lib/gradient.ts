@@ -12,6 +12,15 @@ export type Offset =
 	| 'southeast'
 	| 'southwest';
 
+type LinearGradientOptions = {
+	size?: number;
+	direction?: Direction;
+};
+type RadialGradientOptions = {
+	size?: number;
+	offset?: Offset;
+};
+
 function erfinv(x: number): number {
 	const a = 0.147;
 	const b = 2 / (Math.PI * a) + Math.log(1 - x ** 2) / 2;
@@ -60,13 +69,15 @@ function hslToHex(h: number, s: number, l: number): string {
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export function stringToLinearGradient(input: string, size: number, direction: Direction): string {
+export function stringToLinearGradient(input: string, options?: LinearGradientOptions): string {
 	const [hash1, hash2] = hash(input);
 	const [h1, s1, l1] = hashToHSL(hash1);
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
 	const c2 = hslToHex(h2, s2, l2);
 	let x1: number, y1: number, x2: number, y2: number;
+	const direction = options?.direction ?? 'diagonal';
+	const size = options?.size ?? 256;
 	switch (direction) {
 		case 'vertical':
 			x1 = size / 2;
@@ -104,13 +115,15 @@ export function stringToLinearGradient(input: string, size: number, direction: D
 </svg>`.trim();
 }
 
-export function stringToRadialGradient(input: string, size: number, offset: Offset): string {
+export function stringToRadialGradient(input: string, options?: RadialGradientOptions): string {
 	const [hash1, hash2] = hash(input);
 	const [h1, s1, l1] = hashToHSL(hash1);
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
 	const c2 = hslToHex(h2, s2, l2);
 	let cx: string, cy: string, r: string;
+	const offset = options?.offset ?? 'northeast';
+	const size = options?.size ?? 256;
 	switch (offset) {
 		case 'center':
 			cx = '50%';
