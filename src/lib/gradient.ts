@@ -15,10 +15,12 @@ export type Offset =
 type LinearGradientOptions = {
 	size?: number;
 	direction?: Direction;
+	initial?: boolean;
 };
 type RadialGradientOptions = {
 	size?: number;
 	offset?: Offset;
+	initial?: boolean;
 };
 
 function erfinv(x: number): number {
@@ -70,14 +72,15 @@ function hslToHex(h: number, s: number, l: number): string {
 }
 
 export function stringToLinearGradient(input: string, options?: LinearGradientOptions): string {
+	const direction = options?.direction ?? 'diagonal';
+	const size = options?.size ?? 256;
+	const initial = options?.initial ?? false;
 	const [hash1, hash2] = hash(input);
 	const [h1, s1, l1] = hashToHSL(hash1);
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
 	const c2 = hslToHex(h2, s2, l2);
 	let x1: number, y1: number, x2: number, y2: number;
-	const direction = options?.direction ?? 'diagonal';
-	const size = options?.size ?? 256;
 	switch (direction) {
 		case 'vertical':
 			x1 = size / 2;
@@ -106,6 +109,13 @@ export function stringToLinearGradient(input: string, options?: LinearGradientOp
 	}
 	return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="url(#gradient)" />
+	${
+		initial
+			? `<text x="50%" y="50%" dominant-baseline="central" alignment-baseline="central" text-anchor="middle" fill="white" font-size="${
+					size / 2
+			  }px" font-family="sans-serif">${input[0].toUpperCase()}</text>`
+			: ''
+	}
     <defs>
         <linearGradient id="gradient" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse">
             <stop stop-color="${c1}" />
@@ -116,14 +126,15 @@ export function stringToLinearGradient(input: string, options?: LinearGradientOp
 }
 
 export function stringToRadialGradient(input: string, options?: RadialGradientOptions): string {
+	const offset = options?.offset ?? 'northeast';
+	const size = options?.size ?? 256;
+	const initial = options?.initial ?? false;
 	const [hash1, hash2] = hash(input);
 	const [h1, s1, l1] = hashToHSL(hash1);
 	const c1 = hslToHex(h1, s1, l1);
 	const [h2, s2, l2] = hashToHSL(hash2);
 	const c2 = hslToHex(h2, s2, l2);
 	let cx: string, cy: string, r: string;
-	const offset = options?.offset ?? 'northeast';
-	const size = options?.size ?? 256;
 	switch (offset) {
 		case 'center':
 			cx = '50%';
@@ -173,6 +184,13 @@ export function stringToRadialGradient(input: string, options?: RadialGradientOp
 	}
 	return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="url(#gradient)" />
+	${
+		initial
+			? `<text x="50%" y="50%" dominant-baseline="central" alignment-baseline="central" text-anchor="middle" fill="white" font-size="${
+					size / 2
+			  }px" font-family="sans-serif">${input[0].toUpperCase()}</text>`
+			: ''
+	}
     <defs>
         <radialGradient id="gradient" cx="${cx}" cy="${cy}" r="${r}" gradientUnits="userSpaceOnUse">
             <stop stop-color="${c1}" />
