@@ -94,13 +94,13 @@ export function stringToLinearGradient(input: string, options?: LinearGradientOp
 			x2 = size;
 			y2 = size / 2;
 			break;
-		case 'diagonal':
+		case 'antidiagonal':
 			x1 = 0;
 			y1 = 0;
 			x2 = size;
 			y2 = size;
 			break;
-		case 'antidiagonal':
+		case 'diagonal':
 			x1 = size;
 			y1 = 0;
 			x2 = 0;
