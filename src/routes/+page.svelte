@@ -24,91 +24,103 @@
 	}`;
 </script>
 
-<main class="flex flex-col items-center justify-center gap-10 p-12">
+<main
+	class="flex flex-col items-center justify-center gap-10 p-12 md:gap-16 md:p-24 md:text-xl lg:gap-36"
+>
 	<h1
-		class="bg-clip-text bg-center text-center text-2xl font-bold text-transparent"
+		class="bg-cover bg-clip-text bg-center text-center text-2xl font-bold text-transparent md:text-4xl"
 		style="background-image: url({headerURL};"
 	>
 		Generate a gradient avatar from text
 	</h1>
-	<img src={url} alt={`Avatar corresponding to ${input}`} class="w-8/12" />
-	<input
-		type="text"
-		bind:value={input}
-		class="gradient-input bg-gray-100 p-3 text-lg placeholder:text-gray-500"
-		placeholder="Your text"
-	/>
-	<div class="flex flex-col items-start justify-center">
-		<fieldset class="flex w-full flex-row items-center justify-between gap-4 p-2">
-			<legend class="font-semibold">Mode:</legend>
-			<div class="flex items-center justify-center">
-				<div class="flex items-center justify-center rounded-full transition">
-					<label
-						class="hover:bg-gray-222 flex items-center justify-center gap-2 py-2 px-4 hover:cursor-pointer"
-					>
-						<input type="radio" value="linear" bind:group={mode} class="peer sr-only" checked />
-						<div
-							class="inline-block h-4 w-4 rounded-full bg-gray-300 transition peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-fuchsia-500"
-						/>
-						<span>Linear</span>
-					</label>
-				</div>
-				<div class="flex items-center justify-center rounded-full transition">
-					<label class="flex items-center justify-center gap-2 py-2 px-4 hover:cursor-pointer">
-						<input type="radio" value="radial" bind:group={mode} class="peer sr-only" />
-						<div
-							class="inline-block h-4 w-4 rounded-full bg-gray-300 transition peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-fuchsia-500"
-						/>
-						<span>Radial</span>
-					</label>
-				</div>
-			</div>
-		</fieldset>
-		<label class="flex w-full items-center justify-between py-4 font-semibold"
-			>Initial letter:
-			<input type="checkbox" bind:checked={initial} class="peer hidden" />
-			<div
-				class="peer relative h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-400 after:bg-gray-100 after:transition-all hover:cursor-pointer peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-fuchsia-500 peer-checked:after:translate-x-full peer-checked:after:border-gray-100 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"
+	<div
+		class="flex flex-col items-center justify-center gap-10 md:gap-16 md:text-xl lg:flex-row lg:gap-36"
+	>
+		<div class="flex flex-col items-center justify-center gap-8 lg:gap-12">
+			<img src={url} alt={`Avatar corresponding to ${input}`} class="w-8/12 md:h-64 md:w-64" />
+			<input
+				type="text"
+				bind:value={input}
+				class="gradient-input bg-gray-100 p-3 text-lg placeholder:text-gray-500 md:text-xl"
+				placeholder="Your text"
 			/>
-		</label>
-		{#if mode === 'linear'}
-			<label for="direction" class="flex w-full items-center justify-between py-4 font-semibold"
-				>Direction:
+		</div>
+		<div class="flex flex-col items-start justify-center gap-8 lg:gap-12">
+			<fieldset class="flex w-full flex-row items-center justify-between gap-4">
+				<legend class="font-semibold">Mode:</legend>
+				<div class="flex items-center justify-center">
+					<div class="flex items-center justify-center rounded-full transition">
+						<label
+							class="hover:bg-gray-222 flex items-center justify-center gap-2 py-2 px-4 hover:cursor-pointer"
+						>
+							<input type="radio" value="linear" bind:group={mode} class="peer sr-only" checked />
+							<div
+								class="inline-block h-4 w-4 rounded-full bg-gray-300 transition peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-fuchsia-500"
+							/>
+							<span>Linear</span>
+						</label>
+					</div>
+					<div class="flex items-center justify-center rounded-full transition">
+						<label class="flex items-center justify-center gap-2 py-2 px-4 hover:cursor-pointer">
+							<input type="radio" value="radial" bind:group={mode} class="peer sr-only" />
+							<div
+								class="inline-block h-4 w-4 rounded-full bg-gray-300 transition peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-fuchsia-500"
+							/>
+							<span>Radial</span>
+						</label>
+					</div>
+				</div>
+			</fieldset>
+			<label class="flex w-full items-center justify-between font-semibold"
+				>Initial letter:
+				<input type="checkbox" bind:checked={initial} class="peer hidden" />
+				<div
+					class="peer relative h-6 w-11 rounded-full bg-gray-300 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-400 after:bg-gray-100 after:transition-all hover:cursor-pointer peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-fuchsia-500 peer-checked:after:translate-x-full peer-checked:after:border-gray-100 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"
+				/>
 			</label>
-			<div class="select-wrapper">
-				<select
-					bind:value={direction}
-					id="direction"
-					class="w-full appearance-none border-0 border-b-2 border-gray-400 bg-gray-100 px-2.5 py-2"
-				>
-					<option value="vertical">Vertical</option>
-					<option value="horizontal">Horizontal</option>
-					<option value="diagonal">Diagonal</option>
-					<option value="antidiagonal">Antidiagonal</option>
-				</select>
-			</div>
-		{:else if mode === 'radial'}
-			<label for="offset" class="flex w-full items-center justify-between py-4 font-semibold"
-				>Offset:
-			</label>
-			<div class="select-wrapper">
-				<select
-					bind:value={offset}
-					id="offset"
-					class="w-full appearance-none border-0 border-b-2 border-gray-400 bg-gray-100 px-2.5 py-2"
-				>
-					<option value="center">Center</option>
-					<option value="north">North</option>
-					<option value="south">South</option>
-					<option value="east">East</option>
-					<option value="west">West</option>
-					<option value="northeast">Northeast</option>
-					<option value="northwest">Northwest</option>
-					<option value="southeast">Southeast</option>
-					<option value="southwest">Southwest</option>
-				</select>
-			</div>
-		{/if}
+			{#if mode === 'linear'}
+				<div class="flex w-full flex-col items-center justify-center gap-2">
+					<label for="direction" class="flex w-full items-center justify-between font-semibold"
+						>Direction:
+					</label>
+					<div class="select-wrapper">
+						<select
+							bind:value={direction}
+							id="direction"
+							class="w-full appearance-none border-0 border-b-2 border-gray-400 bg-gray-100 px-2.5 py-2"
+						>
+							<option value="vertical">Vertical</option>
+							<option value="horizontal">Horizontal</option>
+							<option value="diagonal">Diagonal</option>
+							<option value="antidiagonal">Antidiagonal</option>
+						</select>
+					</div>
+				</div>
+			{:else if mode === 'radial'}
+				<div class="flex w-full flex-col items-center justify-center gap-2">
+					<label for="offset" class="flex w-full items-center justify-between font-semibold"
+						>Offset:
+					</label>
+					<div class="select-wrapper">
+						<select
+							bind:value={offset}
+							id="offset"
+							class="w-full appearance-none border-0 border-b-2 border-gray-400 bg-gray-100 px-2.5 py-2"
+						>
+							<option value="center">Center</option>
+							<option value="north">North</option>
+							<option value="south">South</option>
+							<option value="east">East</option>
+							<option value="west">West</option>
+							<option value="northeast">Northeast</option>
+							<option value="northwest">Northwest</option>
+							<option value="southeast">Southeast</option>
+							<option value="southwest">Southwest</option>
+						</select>
+					</div>
+				</div>
+			{/if}
+		</div>
 	</div>
 </main>
 
