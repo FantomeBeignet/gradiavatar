@@ -15,13 +15,22 @@
 		| 'southwest' = 'northeast';
 
 	let url: string;
+	let headerURL: string;
 	$: url = `/${mode}/${input || 'fantomebeignet'}?${initial ? 'initial&' : ''}${
+		mode === 'linear' ? 'direction=' + direction + '&' : 'offset=' + offset + '&'
+	}`;
+	$: headerURL = `/${mode}/${input || 'fantomebeignet'}?${
 		mode === 'linear' ? 'direction=' + direction + '&' : 'offset=' + offset + '&'
 	}`;
 </script>
 
 <main class="flex flex-col items-center justify-center gap-10 p-12">
-	<h1 class="text-center text-2xl font-semibold">Generate a gradient avatar from text</h1>
+	<h1
+		class="bg-clip-text bg-center text-center text-2xl font-bold text-transparent"
+		style="background-image: url({headerURL};"
+	>
+		Generate a gradient avatar from text
+	</h1>
 	<img src={url} alt={`Avatar corresponding to ${input}`} class="w-8/12" />
 	<input
 		type="text"
